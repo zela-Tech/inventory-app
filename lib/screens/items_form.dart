@@ -19,6 +19,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
   late final TextEditingController _categoryCtrl;
   late final TextEditingController _quantityCtrl;
   late final TextEditingController _priceCtrl;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    setState(() => _isLoading = true);
 
     final item = Item(
       id: widget.item?.id ?? '',
@@ -48,19 +50,33 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       price: double.parse(_priceCtrl.text.trim()),
     );
 
-    if (widget.item == null) {
-      await widget.service.addItem(item);
-    } else {
-      await widget.service.updateItem(item);
+    try {
+      if (widget.item == null) {
+        await widget.service.addItem(item);
+      } else {
+        await widget.service.updateItem(item);
+      }
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-
-    if (mounted) Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.item != null;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Item Form')),
+      appBar: AppBar(
+        title: Text(isEditing ? 'Edit Item' : 'Add Item'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -103,9 +119,11 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
+              _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : FilledButton(
                 onPressed: _submit,
-                child: const Text('Submit'),
+                child: Text(isEditing ?'Save changes' : 'Add item'),
               ),
             ],
           ),
