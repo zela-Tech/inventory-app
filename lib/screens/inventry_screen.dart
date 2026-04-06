@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 import '../services/firestore_service.dart';
+import '../screens/items_form.dart';
 
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});
@@ -51,7 +52,12 @@ class InventoryScreen extends StatelessWidget {
                   '\$${item.price.toStringAsFixed(2)}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ItemFormScreen(item: item, service: service),
+                  ),
+                ),
                 onLongPress: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
@@ -73,12 +79,27 @@ class InventoryScreen extends StatelessWidget {
 
                   if (confirm == true) {
                     await service.deleteItem(item.id);
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${item.name} deleted')),
+                      );
+                    }
                   }
                 },
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ItemFormScreen(service: service),
+          ),
+        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
