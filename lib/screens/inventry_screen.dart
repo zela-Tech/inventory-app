@@ -3,16 +3,58 @@ import '../models/item_model.dart';
 import '../services/firestore_service.dart';
 import '../screens/items_form.dart';
 
-class InventoryScreen extends StatelessWidget {
+class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
 
   @override
+  State<InventoryScreen> createState() => _InventoryScreenState();
+}
+class _InventoryScreenState extends State<InventoryScreen> {
+  final FirestoreService service = FirestoreService();
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final service = FirestoreService();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventory'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: TextField(
+              controller: _searchCtrl,
+              decoration: InputDecoration(
+                hintText: 'Search by name or category…',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                contentPadding: EdgeInsets.zero,
+                suffixIcon: _query.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _query = '');
+                        },
+                      )
+                    : null,
+              ),
+              onChanged: (v) => setState(() => _query = v.toLowerCase()),
+            ),
+          ),
+        ),
       ),
       body: StreamBuilder<List<Item>>(
         stream: service.streamItems(),
