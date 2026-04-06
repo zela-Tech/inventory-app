@@ -88,6 +88,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                 decoration: const InputDecoration(labelText: 'Item name'),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Name cannot be empty';
+                  if (v.trim().length < 2) return 'Name must be at least 2 characters';
                   return null;
                 },
               ),
@@ -104,8 +105,14 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               TextFormField(
                 controller:_quantityCtrl,
                 decoration: const InputDecoration(labelText: 'Quantity'),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Quantity cannot be empty';
+
+                  final n = int.tryParse(v.trim());
+                  if (n == null) return 'Must be a whole number';
+                  if (n < 0) return 'Quantity cannot be negative';
                   return null;
                 },
               ),
@@ -113,18 +120,23 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               TextFormField(
                 controller:_priceCtrl,
                 decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Price cannot be empty';
+                  final d = double.tryParse(v.trim());
+                  if (d == null) return 'Must be a valid number';
+                  if (d < 0) return 'Price cannot be negative';
                   return null;
                 },
               ),
               const SizedBox(height: 24),
               _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : FilledButton(
-                onPressed: _submit,
-                child: Text(isEditing ?'Save changes' : 'Add item'),
-              ),
+                ? const Center(child: CircularProgressIndicator())
+                : FilledButton(
+                  onPressed: _submit,
+                  child: Text(isEditing ?'Save changes' : 'Add item'),
+                ),
             ],
           ),
         ),
