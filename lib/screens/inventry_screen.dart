@@ -39,7 +39,21 @@ class InventoryScreen extends StatelessWidget {
             );
           }
 
-          return const SizedBox(); 
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item =items[index];
+
+              return ListTile(
+                title: Text(item.name),
+                subtitle: Text('${item.category} · Qty: ${item.quantity}'),
+                trailing: Text(
+                  '\$${item.price.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              );
+            },
+          );
         },
       ),
     );
