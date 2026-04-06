@@ -14,6 +14,7 @@ class ItemFormScreen extends StatefulWidget {
 }
 
 class _ItemFormScreenState extends State<ItemFormScreen> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameCtrl;
   late final TextEditingController _categoryCtrl;
   late final TextEditingController _quantityCtrl;
@@ -37,15 +38,43 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Item Form'),
-      ),
-      body: const Center(
-        child: Text('form her'),
+      appBar: AppBar(title: const Text('Item Form')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key:_formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller:_nameCtrl,
+                decoration: const InputDecoration(labelText: 'Item name'),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller:_categoryCtrl,
+                decoration: const InputDecoration(labelText: 'Category'),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller:_quantityCtrl,
+                decoration: const InputDecoration(labelText: 'Quantity'),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller:_priceCtrl,
+                decoration: const InputDecoration(labelText: 'Price'),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {},
+                child:const Text('Submit'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
