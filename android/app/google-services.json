@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "696014027777",
+    "project_id": "invetory-app-adomz-2026",
+    "storage_bucket": "invetory-app-adomz-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696014027777:android:3ebfe9f3f39bd6d8b35400",
+        "android_client_info": {
+          "package_name": "com.example.inventory_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQePNUIaS1StuE0NzUk12rUrPHTghZ0yI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
