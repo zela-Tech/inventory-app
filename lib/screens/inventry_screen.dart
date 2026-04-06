@@ -67,18 +67,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-          final items = snapshot.data ?? [];
 
-          if (items.isEmpty) { //case where there's no inventory 
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey),
-                  SizedBox(height: 12),
-                  Text('No items yet. Tap + to add one.'),
-                ],
-              ),
+          final all = snapshot.data ?? [];
+          final items = _query.isEmpty ? all
+            : all
+              .where((i) =>
+                i.name.toLowerCase().contains(_query) ||
+                i.category.toLowerCase().contains(_query))
+              .toList();
+
+          if (items.isEmpty) {
+            return Center(
+              child: Text(_query.isEmpty ? 'No items yet.' : 'No results for "$_query"'),
             );
           }
 
