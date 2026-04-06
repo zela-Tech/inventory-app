@@ -23,7 +23,6 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
   @override
   void initState() {
     super.initState();
-
     _nameCtrl = TextEditingController(text: widget.item?.name ?? '');
     _categoryCtrl = TextEditingController(text: widget.item?.category ?? '');
     _quantityCtrl =TextEditingController(text: widget.item?.quantity.toString() ?? '');
@@ -36,6 +35,26 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
     _quantityCtrl.dispose();
     _priceCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final item = Item(
+      id: widget.item?.id ?? '',
+      name: _nameCtrl.text.trim(),
+      category: _categoryCtrl.text.trim(),
+      quantity: int.parse(_quantityCtrl.text.trim()),
+      price: double.parse(_priceCtrl.text.trim()),
+    );
+
+    if (widget.item == null) {
+      await widget.service.addItem(item);
+    } else {
+      await widget.service.updateItem(item);
+    }
+
+    if (mounted) Navigator.pop(context);
   }
 
   @override
@@ -85,8 +104,8 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {},
-                child:const Text('Submit'),
+                onPressed: _submit,
+                child: const Text('Submit'),
               ),
             ],
           ),
