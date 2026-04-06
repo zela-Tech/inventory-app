@@ -51,21 +51,37 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               TextFormField(
                 controller:_nameCtrl,
                 decoration: const InputDecoration(labelText: 'Item name'),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Name cannot be empty';
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller:_categoryCtrl,
                 decoration: const InputDecoration(labelText: 'Category'),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Category cannot be empty';
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller:_quantityCtrl,
                 decoration: const InputDecoration(labelText: 'Quantity'),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Quantity cannot be empty';
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller:_priceCtrl,
                 decoration: const InputDecoration(labelText: 'Price'),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Price cannot be empty';
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
